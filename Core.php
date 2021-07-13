@@ -72,14 +72,14 @@ class Mugglepay
         $headers = array('content-type: application/json', 'token: ' . $this->MugglepayAppSecret);
         $curl = curl_init();
         if ($type === 'pay') {
-            $this->MugglepayGatewayUrl .= 'orders';
-            curl_setopt($curl, CURLOPT_URL, $this->MugglepayGatewayUrl);
+            $mugglepayUrl = $this->MugglepayGatewayUrl . 'orders';
+            curl_setopt($curl, CURLOPT_URL, $mugglepayUrl);
             curl_setopt($curl, CURLOPT_POST, 1);
             $data_string = json_encode($data);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         } elseif ($type === 'query') {
-            $this->MugglepayGatewayUrl .= 'orders/merchant_order_id/status?id=' . $data['merchant_order_id'];
-            curl_setopt($curl, CURLOPT_URL, $this->MugglepayGatewayUrl);
+            $mugglepayUrl = $this->MugglepayGatewayUrl . 'orders/' . $data['muggle_order_id'];
+            curl_setopt($curl, CURLOPT_URL, $mugglepayUrl);
             curl_setopt($curl, CURLOPT_HTTPGET, 1);
         }
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -91,9 +91,9 @@ class Mugglepay
         return $data;
     }
 
-    public function query($tradeNo)
+    public function query($muggleId)
     {
-        $data['merchant_order_id'] = $tradeNo;
+        $data['muggle_order_id'] = $muggleId;
         return json_decode($this->mprequest($data, 'query'), true);
     }
 }
